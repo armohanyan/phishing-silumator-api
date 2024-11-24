@@ -11,4 +11,4 @@ import { User, UserSchema } from '../../schemas/user/user.schema';
   providers: [PhishingService],
   controllers: [PhishingController],
 })
-export class UserModule {}
+export class PhishingModule {}

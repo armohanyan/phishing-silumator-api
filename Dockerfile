@@ -13,7 +13,8 @@ RUN npm install --immutable --immutable-cache --check-cache
 
 COPY --chown=node:node . .
 
-RUN npm run build
+RUN #npm run build
+CMD ["yarn", "start:dev"]
 
 ###################
 # PRODUCTION

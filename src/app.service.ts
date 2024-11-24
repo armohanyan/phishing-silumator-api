@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'The Phishing Simulator api is active !';
+    return 'The Phishing Simulator api is active !!';
   }
 }

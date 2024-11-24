@@ -6,10 +6,14 @@ import { UserModule } from './modules/users/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppService } from './app.service';
 import { configApp } from './common/config';
+import { AuthModule } from './modules/auth/auth.module';
+import { PhishingModule } from './modules/phishing/phishing.module';
 
 @Module({
   imports: [
     UserModule,
+    AuthModule,
+    PhishingModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configApp],
