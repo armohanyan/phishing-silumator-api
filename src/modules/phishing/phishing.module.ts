@@ -2,11 +2,18 @@ import { Module } from '@nestjs/common';
 import { PhishingService } from './phishing.service';
 import { PhishingController } from './phishing.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../../schemas/user/user.schema';
+import { MailModule } from '../mail/mail.module';
+import {
+  Phishing,
+  PhishingSchema,
+} from '../../schemas/phishing/phishing.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MailModule,
+    MongooseModule.forFeature([
+      { name: Phishing.name, schema: PhishingSchema },
+    ]),
   ],
   providers: [PhishingService],
   controllers: [PhishingController],

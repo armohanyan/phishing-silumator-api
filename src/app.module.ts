@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { configApp } from './common/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { PhishingModule } from './modules/phishing/phishing.module';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { PhishingModule } from './modules/phishing/phishing.module';
       }),
     }),
   ],
-  providers: [AppService],
+  providers: [AppService, JwtAuthGuard],
   controllers: [AppController],
 })
 export class AppModule {}

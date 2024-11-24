@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, HydratedDocument } from 'mongoose';
+
+export type PhishingDocument = HydratedDocument<Phishing>;
 
 @Schema({ collection: 'phishing', timestamps: true })
 export class Phishing extends Document {
