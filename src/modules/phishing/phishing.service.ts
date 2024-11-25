@@ -18,7 +18,7 @@ export class PhishingService {
    * @param email The recipient's email address.
    * @throws BadRequestException if a phishing email has already been sent to the address.
    */
-  async sendEmailToTarget(email: string): Promise<void> {
+  async sendEmailToTarget(email: string): Promise<Phishing> {
     const alreadyAttempted = await this.phishingSchema
       .findOne({ email })
       .exec();
@@ -41,6 +41,8 @@ export class PhishingService {
     });
 
     await newPhishingAttempt.save();
+
+    return newPhishingAttempt;
   }
 
   /**
@@ -49,6 +51,10 @@ export class PhishingService {
    * @throws BadRequestException if no pending phishing attempt is found.
    */
   async markAttemptAsClicked(email: string): Promise<void> {
+    if (!email) {
+      throw new BadRequestException('Email parameter is required.');
+    }
+
     const attempt = await this.phishingSchema.findOne({
       email,
       status: 'pending',

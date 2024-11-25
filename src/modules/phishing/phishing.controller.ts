@@ -5,7 +5,8 @@ import {
   Post,
   Query,
   UseGuards,
-  BadRequestException, HttpCode,
+  BadRequestException,
+  HttpCode,
 } from '@nestjs/common';
 import { PhishingService } from './phishing.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -34,10 +35,13 @@ export class PhishingController {
   @HttpCode(200)
   async sendEmailToTarget(
     @Body() sendPhishingDto: SendPhishingDto,
-  ): Promise<{ success: boolean; message: string }> {
+  ): Promise<PhishingDto> {
     try {
-      await this.phishingService.sendEmailToTarget(sendPhishingDto.email);
-      return { success: true, message: 'Phishing email sent successfully.' };
+      const response = await this.phishingService.sendEmailToTarget(
+        sendPhishingDto.email,
+      );
+
+      return new PhishingDto(response);
     } catch {
       throw new BadRequestException('Failed to send phishing email.');
     }
@@ -57,10 +61,6 @@ export class PhishingController {
   async markClick(
     @Query('email') email: string,
   ): Promise<{ success: boolean }> {
-    if (!email) {
-      throw new BadRequestException('Email parameter is required.');
-    }
-
     try {
       await this.phishingService.markAttemptAsClicked(email);
       return { success: true };
