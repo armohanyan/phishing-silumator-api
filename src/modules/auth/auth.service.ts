@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   ConflictException,
   InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common';
 import { SignUpDto } from './dto/sign-up.dto';
 import { Model } from 'mongoose';
@@ -33,6 +34,7 @@ export class AuthService {
     const { email, password, fullName } = signUpDto;
 
     const existingUser = await this.userSchema.findOne({ email }).exec();
+
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
@@ -47,19 +49,19 @@ export class AuthService {
       throw new InternalServerErrorException('Error hashing password');
     }
 
-    const newUser = new this.userSchema({
-      email,
-      password: hashedPassword,
-      fullName,
-    });
-
     try {
+      const newUser = new this.userSchema({
+        email,
+        password: hashedPassword,
+        fullName,
+      });
+
       await newUser.save();
+
+      return { status: 201, message: 'User registered successfully' };
     } catch {
       throw new InternalServerErrorException('Error saving user');
     }
-
-    return { status: 201, message: 'User registered successfully' };
   }
 
   /**
@@ -83,12 +85,16 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload: IJwtPayload = { email: user.email, id: user.id };
-    const access_token = this.jwtService.sign(payload);
+    try {
+      const payload: IJwtPayload = { email: user.email, id: user.id };
+      const access_token = this.jwtService.sign(payload);
 
-    return {
-      access_token,
-      data: new UserDto(user),
-    };
+      return {
+        access_token,
+        data: new UserDto(user),
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message || 'Failed to sign in');
+    }
   }
 }

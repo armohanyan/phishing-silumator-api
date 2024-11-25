@@ -1,4 +1,10 @@
-import { BadRequestException, Body, Controller, HttpCode, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from '../users/dto/output.user.dto';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -21,13 +27,7 @@ export class AuthController {
   async signUp(
     @Body() signUpDto: SignUpDto,
   ): Promise<{ message: string; status: number }> {
-    try {
-      return await this.authService.signUp(signUpDto);
-    } catch (error) {
-      throw new BadRequestException(
-        error.message || 'User registration failed.',
-      );
-    }
+    return await this.authService.signUp(signUpDto);
   }
 
   /**
@@ -42,10 +42,6 @@ export class AuthController {
   async signIn(
     @Body() signInDto: SignInDto,
   ): Promise<{ access_token: string; data: UserDto }> {
-    try {
-      return await this.authService.signIn(signInDto.email, signInDto.password);
-    } catch (error) {
-      throw new BadRequestException(error.message || 'Invalid credentials.');
-    }
+    return await this.authService.signIn(signInDto.email, signInDto.password);
   }
 }

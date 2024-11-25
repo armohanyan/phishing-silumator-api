@@ -36,15 +36,11 @@ export class PhishingController {
   async sendEmailToTarget(
     @Body() sendPhishingDto: SendPhishingDto,
   ): Promise<PhishingDto> {
-    try {
-      const response = await this.phishingService.sendEmailToTarget(
-        sendPhishingDto.email,
-      );
+    const response = await this.phishingService.sendEmailToTarget(
+      sendPhishingDto.email,
+    );
 
-      return new PhishingDto(response);
-    } catch {
-      throw new BadRequestException('Failed to send phishing email.');
-    }
+    return new PhishingDto(response);
   }
 
   /**
@@ -61,12 +57,9 @@ export class PhishingController {
   async markClick(
     @Query('email') email: string,
   ): Promise<{ success: boolean }> {
-    try {
-      await this.phishingService.markAttemptAsClicked(email);
-      return { success: true };
-    } catch {
-      throw new BadRequestException('Failed to mark the attempt as clicked.');
-    }
+    await this.phishingService.markAttemptAsClicked(email);
+
+    return { success: true };
   }
 
   /**
@@ -77,11 +70,8 @@ export class PhishingController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all phishing attempts' })
   async getAllAttempts(): Promise<PhishingDto[]> {
-    try {
-      const attempts = await this.phishingService.getAllAttempts();
-      return attempts.map((attempt) => new PhishingDto(attempt));
-    } catch {
-      throw new BadRequestException('Failed to retrieve phishing attempts.');
-    }
+    const attempts = await this.phishingService.getAllAttempts();
+
+    return attempts.map((attempt) => new PhishingDto(attempt));
   }
 }

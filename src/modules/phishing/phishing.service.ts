@@ -29,20 +29,24 @@ export class PhishingService {
       );
     }
 
-    const url = `${process.env.APP_URL}/phishing/on-trigger?email=${email}`;
-    const content = `<p>This is a simulated phishing attempt. Click <a href="${url}">here</a> to check the result.</p>`;
+    try {
+      const url = `${process.env.APP_URL}/phishing/on-trigger?email=${email}`;
+      const content = `<p>This is a simulated phishing attempt. Click <a href="${url}">here</a> to check the result.</p>`;
 
-    await this.mailService.sendPhishingEmail(email, content);
+      await this.mailService.sendPhishingEmail(email, content);
 
-    const newPhishingAttempt = new this.phishingSchema({
-      email,
-      status: 'pending',
-      content,
-    });
+      const newPhishingAttempt = new this.phishingSchema({
+        email,
+        status: 'pending',
+        content,
+      });
 
-    await newPhishingAttempt.save();
+      await newPhishingAttempt.save();
 
-    return newPhishingAttempt;
+      return newPhishingAttempt;
+    } catch {
+      throw new BadRequestException('Failed to send phishing email.');
+    }
   }
 
   /**
