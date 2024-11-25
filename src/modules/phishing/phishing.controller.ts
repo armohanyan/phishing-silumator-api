@@ -5,7 +5,6 @@ import {
   Post,
   Query,
   UseGuards,
-  BadRequestException,
   HttpCode,
 } from '@nestjs/common';
 import { PhishingService } from './phishing.service';
